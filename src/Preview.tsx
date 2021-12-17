@@ -3,6 +3,16 @@ import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { warning } from 'rc-util/lib/warning';
+import { saveAs } from 'file-saver';
+import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
+import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
+import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
+import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
+import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import LeftOutlined from '@ant-design/icons/LeftOutlined';
+import RightOutlined from '@ant-design/icons/RightOutlined';
+import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
+
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
@@ -13,6 +23,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
+  // icons 暂时不需要传入
   icons?: {
     rotateLeft?: React.ReactNode;
     rotateRight?: React.ReactNode;
@@ -30,8 +41,7 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, icons = {}, ...restProps } = props;
-  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
+  const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useFrameSetState<{
@@ -103,6 +113,10 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
+  const onDownload= () =>{
+      saveAs(combinationSrc);
+  }
+
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
@@ -110,30 +124,35 @@ const Preview: React.FC<PreviewProps> = props => {
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
     {
-      icon: close,
+      icon: <CloseOutlined />,
       onClick: onClose,
       type: 'close',
     },
     {
-      icon: zoomIn,
+      icon: <ZoomInOutlined />,
       onClick: onZoomIn,
       type: 'zoomIn',
     },
     {
-      icon: zoomOut,
+      icon: <ZoomOutOutlined />,
       onClick: onZoomOut,
       type: 'zoomOut',
       disabled: scale === 1,
     },
     {
-      icon: rotateRight,
+      icon: <RotateRightOutlined />,
       onClick: onRotateRight,
       type: 'rotateRight',
     },
     {
-      icon: rotateLeft,
+      icon: <RotateLeftOutlined />,
       onClick: onRotateLeft,
       type: 'rotateLeft',
+    },
+    {
+      icon:<DownloadOutlined />,
+      onClick: onDownload,
+      type: 'download',
     },
   ];
 
@@ -284,7 +303,7 @@ const Preview: React.FC<PreviewProps> = props => {
           })}
           onClick={onSwitchLeft}
         >
-          {left}
+         <LeftOutlined />
         </div>
       )}
       {showLeftOrRightSwitches && (
@@ -294,7 +313,7 @@ const Preview: React.FC<PreviewProps> = props => {
           })}
           onClick={onSwitchRight}
         >
-          {right}
+          <RightOutlined />
         </div>
       )}
     </Dialog>
