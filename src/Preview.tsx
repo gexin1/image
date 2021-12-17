@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
+import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
+import Dialog from 'rc-dialog';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { warning } from 'rc-util/lib/warning';
@@ -113,9 +114,9 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
-  const onDownload= () =>{
-      saveAs(combinationSrc);
-  }
+  const onDownload = () => {
+    saveAs(combinationSrc);
+  };
 
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
@@ -150,7 +151,7 @@ const Preview: React.FC<PreviewProps> = props => {
       type: 'rotateLeft',
     },
     {
-      icon:<DownloadOutlined />,
+      icon: <DownloadOutlined />,
       onClick: onDownload,
       type: 'download',
     },
@@ -274,7 +275,7 @@ const Preview: React.FC<PreviewProps> = props => {
             key={type}
           >
             {React.isValidElement(icon)
-              ? React.cloneElement(icon, { className: iconClassName })
+              ? React.cloneElement(icon as JSX.Element, { className: iconClassName })
               : icon}
           </li>
         ))}
@@ -303,7 +304,7 @@ const Preview: React.FC<PreviewProps> = props => {
           })}
           onClick={onSwitchLeft}
         >
-         <LeftOutlined />
+          <LeftOutlined />
         </div>
       )}
       {showLeftOrRightSwitches && (
