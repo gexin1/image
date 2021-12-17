@@ -5,6 +5,8 @@ import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { warning } from 'rc-util/lib/warning';
 import { saveAs } from 'file-saver';
+import path from 'path';
+import qs from 'qs';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
@@ -115,7 +117,10 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onDownload = () => {
-    saveAs(combinationSrc);
+    const paramStr = combinationSrc?.split('?')[1] || '';
+    const { index, name, url } = qs.parse(paramStr);
+    const extraName = path.extname(url).split('?')[0];
+    saveAs(combinationSrc, `${name}-${index}${extraName}`);
   };
 
   const wrapClassName = classnames({
